@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CineMaxx</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block css %}{% endblock %}
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="{% static 'icons/Vector.png' %}" alt="Cinemaxx Logo">
+    <span class="brand">
+      <span class="cine">Cine</span><span class="maxx">maxx</span>
+    </span>
+  </div>
+
+  <nav class="menu-box" id="mainMenu">
+    <a href="{% url 'movies:homepage' %}">Home</a>
+    <a href="{% url 'movies:movies' %}">Movies</a>
+    <a href="{% url 'movies:contact' %}">Contact</a>
+  </nav>
+
+  {% if user.is_authenticated %}
+    <div class="profile-dropdown" id="profileDropdown">
+        <button class="profile-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false">
+          <span class="profile-name">{{ user.full_name }}</span>
+          <span class="arrow" aria-hidden="true">
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff" aria-hidden="true">
+              <path d="M6 9L12 15L18 9" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+        </button>
+
+        <div class="dropdown-menu" role="menu" aria-label="Profile menu">
+          <a href="{% url 'users:profile' %}" role="menuitem">Profile</a>
+          <a href="{% url 'users:profile' %}" role="menuitem">Order History</a>
+          <a href="{% url 'users:logout' %}" role="menuitem">Logout</a>
+        </div>
+    </div>
+
+  {% else %}
+    <div class="icons">
+      <img src="{% static 'icons/Icon search.png' %}" alt="Search" class="icon">
+
+      <div class="user-menu">
+        <img src="{% static 'icons/user profile.png' %}" alt="User" class="icon user-icon">
+
+        <div class="dropdown-menu">
+            <a href="{% url 'users:login' %}" class="dropdown-item">Log In</a>
+            <a href="#" class="dropdown-item">Settings</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</header>
+
+  {% block content %}{% endblock %}
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-branding">
+      <img src="{% static 'icons/Vector.png' %}" alt="Cinemaxx Logo">
+      <span class="brand"><span class="cine">Cine</span><span class="maxx">maxx</span></span>
+    </div>
+
+    <div class="footer-links">
+      <div class="footer-column">
+        <h3>Home</h3>
+        <ul>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Movies</h3>
+        <ul>
+          <li><a href="#">Genres</a></li>
+          <li><a href="{% url 'movies:movies' %}">Trending</a></li>
+          <li><a href="{% url 'movies:movies' %}">Coming Soon</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="{% url 'movies:contact' %}">Contact Us</a></li>
+        </ul>
+      </div>
+    
+
+    <div class="footer-social">
+      <h3>Connect With Us</h3>
+      <div class="social-icons">
+        <a href="#"><img src="{% static 'icons/facebook icon.png' %}" alt="Facebook" /></a>
+        <a href="#"><img src="{% static 'icons/icon twitter.png' %}" alt="Twitter" /></a>
+        <a href="#"><img src="{% static 'icons/icon linkedin.png' %}" alt="LinkedIn" /></a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>©2025 Cinemaxx. All Rights Reserved</p>
+    <div class="legal-links">
+      <a href="#">Terms of Use</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Handle authenticated user dropdown
+const profileBtn = document.getElementById('profileBtn');
+const profileDropdown = document.getElementById('profileDropdown');
+
+if (profileBtn) {
+    profileBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menu = profileDropdown.querySelector('.dropdown-menu');
+        menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+        const menu = profileDropdown.querySelector('.dropdown-menu');
+        if (!profileDropdown.contains(e.target)) {
+            menu.style.display = 'none';
+        }
+    });
+}
+
+// Handle non-authenticated user dropdown
+const userIcon = document.querySelector('.user-icon');
+if (userIcon) {
+    userIcon.addEventListener('click', function () {
+        const menu = document.querySelector('.user-menu .dropdown-menu');
+        menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+        const menu = document.querySelector('.user-menu .dropdown-menu');
+        const icon = document.querySelector('.user-icon');
+
+        if (!icon.contains(e.target) && !menu.contains(e.target)) {
+            menu.style.display = 'none';
+        }
+    });
+}
+</script>
+
+{% block js %}{% endblock %}
+
+</body>
+</html>

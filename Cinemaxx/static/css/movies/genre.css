@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #0d0d0d;
+  font-family: "Manrope", sans-serif;
+  color: white;
+
+}
+header.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px; 
+}
+.logo img {
+  height: 30px;
+}
+.brand {
+  display: inline-block; 
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+.cine {
+  color: #fff;  
+}
+.maxx {
+  color: #891D1D; 
+}
+
+.menu-box {
+  display: flex;
+  gap: 25px;
+  font-family: "Manrope", sans-serif;
+  background: #000;              
+  padding: 14px 30px;
+  border-radius: 12px;
+  border: 3px solid #333333;      
+  margin-right: 7px;
+}
+.menu-box a {
+  text-decoration: none;
+  color: #ccc;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+.menu-box a:hover {
+  color: #fff;
+}
+.menu-box .active {
+  color: #fff;
+  font-weight: 400;
+}
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.icon:hover {
+  opacity: 0.7;
+}
+
+
+.title {
+  text-align: center;
+  font-size: 50px;
+  font-weight: 700;
+  margin-top: 80px;
+}
+
+.stroke {
+  width: 90%;
+  max-width: 900px;
+  box-sizing: border-box;
+  margin: 30px auto; 
+  padding: 12px;
+  height: auto;
+  border: 3px solid #262626;
+  display: block;
+}
+
+.container {
+  width: 85%;
+  max-width: 900px;
+  margin: auto;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.movie-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-link .movie-card {
+    cursor: pointer;
+}
+
+.movie-card {
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.02);
+}
+
+.poster {
+  width: 150px;
+  height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.info h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.year {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.info p {
+  margin: 10px 0;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.rating {
+  position: absolute;
+  right: 80px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.green { color: #2ecc71; }
+.red { color: #e74c3c; }
+.yellow { color: #f1c40f; }
+
+.more-btn {
+  background: #d40000;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  display: block;
+  margin: 35px auto 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.more-btn:hover {
+  background: #ff1a1a;
+}
+
+.profile-dropdown {
+  position: relative;
+  margin-left: 20px;
+}
+
+.profile-btn {
+  background: #0d0d0d;
+  border: 3px solid #F00000;
+  color: white;
+  padding: 6px 10px; 
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s;
+}
+
+.profile-btn:hover {
+  background: #F00000;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+.arrow svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  transition: transform 180ms ease;
+  transform-origin: 50% 50%;
+}
+
+.profile-btn .profile-name {
+  display: inline-block;
+  background: #F00000;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 999px;
+  font-size: 15px; 
+  font-weight: 700;
+  line-height: 1;
+}
+
+.profile-btn .arrow svg path { stroke: #ffffff; }
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 60px;
+  background: #fff;
+  color: #222;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  padding: 6px 0;
+  width: 220px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  z-index: 999;
+  overflow: hidden;
+}
+
+.dropdown-menu::before{
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 18px; 
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  transform: rotate(45deg);
+  border-left: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.dropdown-menu a {
+  color: #222;
+  padding: 18px 20px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dropdown-menu a:last-child{ 
+  border-bottom: none; 
+}
+
+.dropdown-menu a:hover{ 
+  background: rgba(0,0,0,0.03) 
+}
+
+.profile-dropdown.open .dropdown-menu{ 
+  display: flex 
+}
+.profile-dropdown.open .arrow svg{ 
+  transform: rotate(180deg); 
+  transition: transform 180ms ease 
+}

@@ -1,0 +1,273 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/movies/contact.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="contact-container">
+    <div class="left-panel">
+        <h1>Get In Touch</h1>
+        <p>We're here to help you with any problems you may be having with our website.</p>
+        <img src="{% static 'pics/contact page photo.png' %}" alt="photo">
+    </div>
+    <div class="right-panel">
+    <form class="contact-form" id="contact-form" method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" name="first_name" placeholder="Enter First Name" required>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" name="last_name" placeholder="Enter Last Name" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your Email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number">
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="5" placeholder="Enter your Message" required></textarea>
+      </div>
+
+      <button type="submit" class="send-btn">Send Message</button>
+    </form>
+  
+    <p id="confirmationMessage" style="display:none; color:green; margin-top:10px;">
+      ✅ Your form has been sent successfully!
+    </p>
+  </div>
+       
+</div>
+
+<button class="feedback-btn" id="openFeedback">
+  <span class="icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  Give Feedback
+</button>
+
+<div class="modal-backdrop" id="feedbackModal">
+  <div class="modal">
+    <header class="modal-header">
+      <h2>We’d love your feedback 🎬</h2>
+      <button class="close-btn" id="closeModal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="modal-body" id="modalBody">
+      <form id="feedbackForm" method="POST" action="{% url 'movies:submit_feedback' %}">
+        {% csrf_token %}
+        <label>Your Name</label>
+        <input type="text" id="name" name="name" class="input" placeholder="Enter your name" required>
+
+        <label>Your Rating</label>
+        <input type="hidden" id="rating" name="rating" value="0">
+        <div class="stars" id="starContainer">
+          <span class="star" data-value="1">&#9733;</span>
+          <span class="star" data-value="2">&#9733;</span>
+          <span class="star" data-value="3">&#9733;</span>
+          <span class="star" data-value="4">&#9733;</span>
+          <span class="star" data-value="5">&#9733;</span>
+        </div>
+
+        <label>Your Feedback</label>
+        <textarea id="message" name="message" class="input" rows="4" placeholder="Share your experience..." required></textarea>
+
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn primary">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Contact Form Submission
+document.getElementById("contact-form").addEventListener("submit", function(event) {
+  event.preventDefault();
+  
+  const formData = new FormData(this);
+  
+  fetch(this.action || window.location.href, {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById("confirmationMessage").style.display = "block";
+      this.reset();
+      setTimeout(() => {
+        document.getElementById("confirmationMessage").style.display = "none";
+      }, 3000);
+    }
+  })
+  .catch(error => console.error('Error:', error));
+});
+
+// Burger Menu
+const burger = document.getElementById('burger');
+const menu = document.querySelector('.menu-box');
+
+if (burger && menu) {
+  burger.addEventListener('click', () => {
+    menu.classList.toggle('active');
+    burger.classList.toggle('active');
+  });
+}
+
+// Feedback Modal
+const openBtn = document.getElementById('openFeedback');
+const backdrop = document.getElementById('feedbackModal');
+const closeBtn = document.getElementById('closeModal');
+const cancelBtn = document.getElementById('cancelBtn');
+const feedbackForm = document.getElementById('feedbackForm');
+const stars = document.querySelectorAll('.star');
+const modalBody = document.getElementById('modalBody');
+let selectedRating = 0;
+
+if (openBtn && backdrop) {
+  openBtn.addEventListener('click', () => {
+    console.log('Opening feedback modal');
+    backdrop.classList.add('open');
+  });
+}
+
+const closeModal = () => {
+  backdrop.classList.remove('open');
+};
+
+if (closeBtn) {
+  closeBtn.addEventListener('click', closeModal);
+}
+
+if (backdrop) {
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+}
+
+function updateStars(rating, starList = stars) {
+  starList.forEach(star => {
+    star.classList.toggle('active', star.getAttribute('data-value') <= rating);
+  });
+}
+
+function showThankYouMessage(rating) {
+  modalBody.innerHTML = `
+    <div class="thank-you">
+      <div class="star-animation">⭐️⭐️⭐️⭐️⭐️</div>
+      <h2>Thank You!</h2>
+      <p>We appreciate your ${rating}-star feedback.<br>Your opinion helps us improve our cinema experience 🍿</p>
+    </div>
+  `;
+  setTimeout(closeModal, 2500);
+}
+
+function showTempMessage(msg, isError = false) {
+  const notice = document.createElement('p');
+  notice.textContent = msg;
+  notice.style.color = isError ? 'red' : 'gold';
+  notice.style.textAlign = 'center';
+  notice.style.marginTop = '10px';
+  modalBody.appendChild(notice);
+  setTimeout(() => notice.remove(), 1500);
+}
+
+// Feedback Form Submit
+feedbackForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  if (!selectedRating) {
+    showTempMessage("Please select a star rating ⭐", true);
+    return;
+  }
+  
+  // Set the rating value in the hidden input
+  document.getElementById('rating').value = selectedRating;
+  
+  const formData = new FormData(feedbackForm);
+  
+  fetch(feedbackForm.action, {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showThankYouMessage(selectedRating);
+    } else {
+      showTempMessage(data.message || "Error submitting feedback", true);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showTempMessage("Error submitting feedback", true);
+  });
+});
+
+// Star Rating Interaction
+stars.forEach(star => {
+  star.addEventListener('click', () => {
+    selectedRating = star.getAttribute('data-value');
+    updateStars(selectedRating);
+  });
+  star.addEventListener('mouseover', () => {
+    updateStars(star.getAttribute('data-value'));
+  });
+  star.addEventListener('mouseout', () => {
+    updateStars(selectedRating);
+  });
+});
+
+cancelBtn.addEventListener('click', closeModal);
+
+// Navigation Links Active State
+const navLinks = document.querySelectorAll('.menu-box a');
+const currentPage = window.location.pathname.split("/").pop();
+
+navLinks.forEach(link => {
+  if (link.getAttribute('href') === currentPage) {
+    link.classList.add('active'); 
+  } else {
+    link.classList.remove('active'); 
+  }
+});
+
+// User Dropdown Menu
+const profileBtn = document.querySelector('.profile-btn');
+if (profileBtn) {
+  profileBtn.addEventListener('click', function () {
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    profileDropdown.classList.toggle('open');
+  });
+
+  document.addEventListener('click', function(e) {
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+      profileDropdown.classList.remove('open');
+    }
+  });
+}
+</script>    
+{% endblock %}

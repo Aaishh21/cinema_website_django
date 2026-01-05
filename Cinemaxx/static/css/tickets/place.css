@@ -1,0 +1,273 @@
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --accent-red: #e73228;
+            --seat-available: #4a4a4a;
+            --seat-occupied: #222222;
+            --border-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 48vh; 
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 0;
+            overflow: hidden;
+            background-color: #000; 
+        }
+        .hero-img {
+            position: absolute;
+            inset: 0; 
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            z-index: 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), var(--bg-color));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .booking-details .ticket-list {
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 6px; 
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 20px;
+            position: relative;
+            top: 40px; 
+            z-index: 2;
+        }
+
+        .left-panel {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .poster {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: url('pics/Rectangle\ 85.png') center/cover;
+            aspect-ratio: 2/3;
+            position: relative;
+        }
+        
+        
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ticket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .ticket-info span {
+            margin-right: 10px;
+        }
+        .row-num { font-weight: bold; font-size: 16px; }
+        .seat-num { color: #aaa; }
+        .price { margin-left: auto; margin-right: 10px; }
+        .remove-btn { cursor: pointer; color: #666; }
+
+        .total {
+            text-align: right;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .total strong {
+            color: white;
+            font-size: 18px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: #FF2A2A;
+        }
+
+        .btn-next {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 360px;
+        }
+
+        .screen-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .screen {
+            background-color: #fff;
+            height: 6px; 
+            width: 380px; 
+            margin: 0 auto 12px auto;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            opacity: 0.8;
+        }
+        
+        .screen-text {
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr); 
+            gap: 8px;
+            margin-bottom: 30px;
+            transform: scale(1.05); 
+            transform-origin: center top;
+        }
+
+        .seat {
+            width: 20px;
+            height: 20px;
+            background-color: var(--seat-available);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .seat:hover:not(.occupied) {
+            transform: scale(1.25);
+        }
+
+        .seat.occupied {
+            background-color: var(--seat-occupied);
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background-color: var(--accent-red);
+            box-shadow: 0 0 5px var(--accent-red);
+        }
+        
+        .seat.hidden {
+            background-color: transparent;
+            pointer-events: none;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            font-size: 10px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .right-panel {
+            width: 250px;
+            padding-top: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .info-block {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .info-box {
+            border: 1px solid #444;
+            padding: 10px 15px;
+            border-radius: 2px;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        .date-day { font-size: 24px; font-weight: bold; display: block; line-height: 1; }
+        .date-month { font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        
+        .time-val { font-size: 18px; }
+        .hall-val { font-size: 24px; font-weight: bold; }

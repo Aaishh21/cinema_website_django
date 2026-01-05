@@ -1,0 +1,183 @@
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    overflow: auto;     
+}
+
+input, button, textarea, select, label {
+    font-family: inherit;
+}
+
+.container {
+    width: 550px;
+    justify-content: center;
+    text-align: center;
+}
+
+h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.register-h1 {
+    margin-top: 100px;
+}
+
+.highlight {
+    color: #e50914;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    display: block; 
+    width: 100%;
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.container form label,
+.login-form label {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 24px;
+    border: none;
+    background-color: #fff;
+    font-size: 14px;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"]{
+    padding-right: 56px; 
+}
+
+input[type="email"]{
+    margin-bottom: 20px;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #333;
+}
+
+.eye-icon svg.hidden {
+    display: none;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-textfield-decoration-container,
+input[type="password"]::-webkit-search-decoration,
+input[type="password"]::-webkit-speech-button {
+    display: none !important;
+}
+
+input[type="password"]{
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+button {
+    background-color: #e50914;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    padding: 24px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transition: background 0.3s, transform 0.1s;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #b00610;
+    transform: scale(1.03);
+}
+
+.links {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.links a {
+    color: #e50914;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.container form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field{
+    position: relative;
+    margin-bottom: 12px;
+}
+
+input[type="tel"], input[type="text"]{
+    width:100%;
+    padding:24px;
+    border:0;
+    background:#fff;
+    font-size:14px;
+}
+
+.register-page .eye-icon{
+    top: 70%;
+}
+
+.register-page .links{
+    margin-bottom: 70px;
+}

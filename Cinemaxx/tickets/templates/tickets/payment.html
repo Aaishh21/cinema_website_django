@@ -1,0 +1,148 @@
+{% extends "tickets/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/tickets/payment.css' %}">
+{% endblock %}
+
+{% block content %} 
+        <section class="form-panel">
+            <div class="form-box">
+                
+                <div class="form-column">
+                    <h3>Personal Information</h3>
+
+                    <label>Full Name</label>
+                    <input type="text" value="{{ user.full_name }}">
+
+                    <label>Email</label>
+                    <input type="email" value="{{ user.email }}">
+
+                    <label>Phone Number</label>
+                    <input type="text" value="{{ user.phone_number }}">
+                </div>
+
+                <div class="form-column">
+                    <h3>Card Details</h3>
+
+                    <label>Cardholder Name</label>
+                    <input type="text" value="Aknur Azamatkyzy">
+
+                    <label>Card Number</label>
+                    <input type="text" value="•••• •••• •••• ••••">
+
+                    <div class="card-row">
+                        <div>
+                            <label>Expiry Date</label>
+                            <input type="text" placeholder="MM / YY">
+                        </div>
+
+                        <div>
+                            <label>CVC</label>
+                            <input type="text" placeholder="•••">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="pay-btn">Complete Payment</button>
+        </section>
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const ticketList = document.getElementById("ticketList");
+    const totalAmountEl = document.getElementById("totalAmount");
+
+    let seats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
+    updateUI();
+
+    function updateUI() {
+        ticketList.innerHTML = "";
+        let total = 0;
+
+        if (seats.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'ticket-empty';
+            empty.style.color = '#666';
+            empty.style.fontSize = '13px';
+            empty.style.padding = '8px 0';
+            empty.textContent = 'No tickets selected';
+            ticketList.appendChild(empty);
+            totalAmountEl.textContent = "0 ₸";
+            return;
+        }
+
+        seats.forEach((idx) => {
+            const row = Math.floor(idx / 16) + 1;
+            const seat = (idx % 16) + 1;
+            const price = getPrice(row);
+            total += price;
+
+            const item = document.createElement('div');
+            item.className = 'ticket-item';
+
+            const info = document.createElement('div');
+            info.className = 'ticket-info';
+            const rowSpan = document.createElement('span');
+            rowSpan.className = 'row-num';
+            rowSpan.textContent = row + ' row';
+            const seatSpan = document.createElement('span');
+            seatSpan.className = 'seat-num';
+            seatSpan.textContent = seat + 'th seat';
+            info.appendChild(rowSpan);
+            info.appendChild(seatSpan);
+
+            const priceEl = document.createElement('div');
+            priceEl.className = 'price';
+            priceEl.textContent = price + ' ₸';
+
+            const remove = document.createElement('div');
+            remove.className = 'remove-btn';
+            remove.textContent = '✕';
+            remove.style.cursor = 'pointer';
+            remove.dataset.index = idx;
+
+            item.appendChild(info);
+            item.appendChild(priceEl);
+            item.appendChild(remove);
+
+            ticketList.appendChild(item);
+        });
+
+        totalAmountEl.textContent = total + " ₸";
+        localStorage.setItem("totalPrice", total + " ₸");
+
+        ticketList.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.index, 10);
+                if (isNaN(idx)) return;
+            
+                seats = seats.filter(s => s !== idx);
+                localStorage.setItem('selectedSeats', JSON.stringify(seats));
+                updateUI();
+            });
+        });
+    }
+
+    
+    function getPrice(row) {
+        const base = 1500;
+        const rows = 10;
+        
+        return base + (rows - row + 1) * 100;
+    }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const payBtn = document.querySelector(".pay-btn");
+
+    payBtn.addEventListener("click", () => {
+        localStorage.setItem("paymentStatus", "success");
+
+        window.location.href = "ticket-success.html";
+    });
+});
+</script>
+
+{% endblock %}

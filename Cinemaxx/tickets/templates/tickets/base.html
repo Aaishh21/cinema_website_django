@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemaxx - Book Your Tickets</title>
+
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <div class="hero">
+        <img class="hero-img" src="{% static 'pics/home.png' %}" alt="Кинофон">
+    </div>
+    
+    <div class="container">
+        <aside class="left-panel">
+            <div class="poster">
+                {% if showtime and showtime.movie.poster %}
+                    <img src="{{ showtime.movie.poster.url }}" alt="{{ showtime.movie.title }}" style="width: 100%; height: auto; border-radius: 8px;">
+                {% else %}
+                    <div style="background: #333; width: 100%; height: 300px; border-radius: 8px;"></div>
+                {% endif %}
+            </div>
+            <div class="booking-details">
+                {% if showtime %}
+                    <div style="padding: 15px 0; border-bottom: 1px solid #444; margin-bottom: 15px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 18px;">{{ showtime.movie.title }}</h3>
+                        <p style="margin: 5px 0; font-size: 12px; color: #999;">{{ showtime.movie.genre.name }}</p>
+                    </div>
+                {% endif %}
+                <div class="ticket-list" id="ticketList">
+                    <div class="ticket-empty" style="color:#666; font-size:13px; padding:8px 0;">No tickets selected</div>
+                </div>
+
+                <div class="total">
+                    Total: <strong id="totalAmount">0 ₸</strong>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-cancel">CANCEL</button>
+                    <button class="btn btn-next">NEXT</button>
+                </div>
+            </div>
+        </aside>
+
+        {% block content %}{% endblock %}
+
+        <aside class="right-panel">
+            {% if showtime %}
+                <div class="info-block">
+                    <div class="info-label">DATE:</div>
+                    <div class="info-box">
+                        <span class="date-day">{{ showtime.start_time|date:"d" }}</span>
+                        <span class="date-month">{{ showtime.start_time|date:"M"|upper }}</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <div class="info-label">TIME:</div>
+                    <div class="info-box">
+                        <span class="time-val">{{ showtime.start_time|date:"H:i" }}</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <div class="info-label">HALL:</div>
+                    <div class="info-box">
+                        <span class="hall-val">{{ showtime.hall.name }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="info-block">
+                    <div class="info-label">NO SHOWTIME</div>
+                    <div class="info-box">
+                        <p style="color: #999; font-size: 12px;">Please select a movie and showtime</p>
+                    </div>
+                </div>
+            {% endif %}
+        </aside>
+    </div>
+
+</body>
+</html>

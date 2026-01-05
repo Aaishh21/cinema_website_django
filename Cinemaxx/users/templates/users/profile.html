@@ -1,0 +1,189 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/users/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+  <main class="profile-main">
+    <section class="profile-banner">
+      <div class="profile-left">
+        <div class="avatar-container">
+          {% if user.avatar %}
+            <img class="avatar" src="{{ user.avatar.url }}" alt="User avatar">
+          {% else %}
+            <img class="avatar" src="{% static 'icons/default_avatar.jpg' %}" alt="User avatar">
+          {% endif %}
+          <label for="avatarInput" class="avatar-change-btn">Change</label>
+          <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;" class="avatar-input">
+        </div>
+      </div>
+      <div class="profile-info">
+        <h1 class="full-name">{{ user.full_name }}  </h1>
+        <p class="email">{{ user.email }}</p>
+      </div>
+    </section>
+  </main>
+
+  <section class="profile-details">
+    <div class="profile-container">
+      <aside class="profile-sidebar">
+        <div class="sidebar-card">
+          <nav class="side-nav">
+            <a href="#" class="side-link active">My profile</a>
+            <a href="#" class="side-link">Order history</a>
+          </nav>
+
+          <div class="logout-area">
+            <a href="{% url 'users:logout' %}" class="logout-btn">Logout</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="profile-panel">
+  
+          <div class="panel-profile panel-view">
+            <div class="panel-header">
+              <h2>My profile</h2>
+            </div>
+            <form action="{% url 'users:profile' %}" method="post" enctype="multipart/form-data" id="profileForm">
+            {% csrf_token %}
+              <div class="panel-body">
+                <div class="field-row">
+                  <div class="label">Full Name</div>
+                  <div class="value">
+                    <strong class="display-text">{{ user.full_name }}</strong>
+                    <input type="text" name="full_name" value="{{ user.full_name }}" class="edit-input hidden" placeholder="Full Name">
+                  </div>
+                  <div class="actions">
+                    <button type="button" class="edit-btn" data-field="full_name">Edit</button>
+                    <button type="button" class="save-btn hidden" data-field="full_name">Save</button>
+                  </div>
+                </div>
+
+                <div class="field-row">
+                  <div class="label">Email</div>
+                  <div class="value">
+                    <strong class="display-text">{{ user.email }}</strong>
+                    <input type="email" name="email" value="{{ user.email }}" class="edit-input hidden" placeholder="Email">
+                  </div>
+                  <div class="actions">
+                    <button type="button" class="edit-btn" data-field="email">Edit</button>
+                    <button type="button" class="save-btn hidden" data-field="email">Save</button>
+                  </div>
+                </div>
+
+                <div class="field-row">
+                  <div class="label">Phone Number</div>
+                  <div class="value">
+                    <strong class="display-text">{{ user.phone_number }}</strong>
+                    <input type="tel" name="phone_number" value="{{ user.phone_number }}" class="edit-input hidden" placeholder="Phone Number">
+                  </div>
+                  <div class="actions">
+                    <button type="button" class="edit-btn" data-field="phone_number">Edit</button>
+                    <button type="button" class="save-btn hidden" data-field="phone_number">Save</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        <div class="panel-orders panel-view" style="display:none;">
+          <div class="panel-header">
+            <h2>Order history</h2>
+          </div>
+
+          <div class="orders-controls">
+            <button class="tab-btn active" data-tab="active">Active orders</button>
+            <button class="tab-btn" data-tab="past">Past orders</button>
+          </div>
+
+          <div class="orders-list">
+            <div class="orders-active" data-list="active">
+              {% if active_orders %}
+                {% for booking in active_orders %}
+                <div class="ticket-card">
+                  <div class="ticket-qr">
+                    <img src="{% static 'icons/qr.png' %}" alt="QR code" />
+                  </div>
+                  <div class="ticket-banner">
+                    {% if booking.showtime.movie.horizontal_poster %}
+                      <img src="{{ booking.showtime.movie.horizontal_poster.url }}" alt="Movie banner" />
+                    {% elif booking.showtime.movie.poster %}
+                      <img src="{{ booking.showtime.movie.poster.url }}" alt="Movie poster" />
+                    {% else %}
+                      <img src="{% static 'icons/ticket-banner.png' %}" alt="Movie banner" />
+                    {% endif %}
+                    <div class="ticket-meta">
+                      <div class="movie-title">{{ booking.showtime.movie.title }} {{ booking.showtime.movie.age_rating }}+</div>
+                      {% with booking.ticket_set.first as ticket %}
+                        {% if ticket %}
+                        <div class="seat-row">ROW <span><strong>{{ ticket.seat.row }}</strong></span> &nbsp; SEAT <span><strong>{{ ticket.seat.number }}</strong></span></div>
+                        {% endif %}
+                      {% endwith %}
+                    </div>
+                    <div class="ticket-side">
+                      <div class="ticket-date">DATE <br> <strong>{{ booking.showtime.start_time|date:"d" }}</strong> <span>{{ booking.showtime.start_time|date:"M"|lower }}</span></div>
+                      <div class="ticket-time">TIME <br><strong>{{ booking.showtime.start_time|date:"H:i" }}</strong></div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+              <div class="orders-empty">
+                <div class="empty-illustration" aria-hidden="true">🎬</div>
+                <h3>No active orders</h3>
+                <p class="muted">You don't have any upcoming bookings. Book your tickets now!</p>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="orders-past" data-list="past">
+              {% if past_orders %}
+                {% for booking in past_orders %}
+                <div class="ticket-card">
+                  <div class="ticket-qr">
+                    <img src="{% static 'icons/qr.png' %}" alt="QR code" />
+                  </div>
+                  <div class="ticket-banner">
+                    {% if booking.showtime.movie.horizontal_poster %}
+                      <img src="{{ booking.showtime.movie.horizontal_poster.url }}" alt="Movie banner" />
+                    {% elif booking.showtime.movie.poster %}
+                      <img src="{{ booking.showtime.movie.poster.url }}" alt="Movie poster" />
+                    {% else %}
+                      <img src="{% static 'icons/ticket-banner.png' %}" alt="Movie banner" />
+                    {% endif %}
+                    <div class="ticket-meta">
+                      <div class="movie-title">{{ booking.showtime.movie.title }} {{ booking.showtime.movie.age_rating }}+</div>
+                      {% with booking.ticket_set.first as ticket %}
+                        {% if ticket %}
+                        <div class="seat-row">ROW <span><strong>{{ ticket.seat.row }}</strong></span> &nbsp; SEAT <span><strong>{{ ticket.seat.number }}</strong></span></div>
+                        {% endif %}
+                      {% endwith %}
+                    </div>
+                    <div class="ticket-side">
+                      <div class="ticket-date">DATE <br> <strong>{{ booking.showtime.start_time|date:"d" }}</strong> <span>{{ booking.showtime.start_time|date:"M"|lower }}</span></div>
+                      <div class="ticket-time">TIME <br><strong>{{ booking.showtime.start_time|date:"H:i" }}</strong></div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+              <div class="orders-empty">
+                <div class="empty-illustration" aria-hidden="true">🎟️</div>
+                <h3>You don't have any past orders</h3>
+                <p class="muted">Looks like you haven't purchased any tickets yet. Your past orders will appear here.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block js %}
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}

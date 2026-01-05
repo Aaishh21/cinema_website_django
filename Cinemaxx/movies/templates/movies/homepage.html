@@ -1,0 +1,285 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/movies/homepage.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Your Cinema, Your Experience</h1>
+      <p>
+        Step into the world of movies like never before. At Cinemaxx, we bring
+        you the magic of the big screen with the latest blockbusters, timeless
+        classics, and special premieres.
+      </p>
+      <a href="{% url 'movies:movies' %}" class="btn">Book Tickets Now</a>
+    </div>
+  </section>
+ 
+<section class="categories-header">
+  <div class="categories-top">
+    <div class="categories-text">
+      <h2>Explore our wide variety of categories</h2>
+      <p>
+        Whether you're looking for a comedy to make you laugh, a drama to make you think,
+        or a documentary to learn something new
+      </p>
+    </div>
+
+    <div class="slider-controls">
+      <button class="arrow-btn">&#8592;</button>
+      <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+      <button class="arrow-btn">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="categories-wrapper"> 
+  
+  <div class="categories-container">
+    {% for genre in genres %}
+      <div class="category-card">
+        <div class="card-images">
+          {% for movie in genre.movies.all|slice:":4" %}
+            {% if movie.poster %}
+              <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <div class="card-footer">
+          <h3>{{ genre.name }}</h3>
+          <span class="arrow">&#8594;</span>
+        </div>
+
+        <a class="card-link" href="{% url 'movies:specific_genre' genre_id=genre.id %}" aria-label="Open {{ genre.name }} genre"></a>
+      </div>
+    {% endfor %}
+  </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Why Choose Our Website?</h2>
+  <p>We provide more than just movies — we deliver unforgettable experiences.</p>
+  
+  <div class="features">
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 1.png' %}" alt="Latest Blockbusters">
+        </div>
+        <h3>Latest Blockbusters</h3>
+      </div>
+
+      
+      <p>Always the newest movies, from Hollywood hits to local premieres.</p>
+    </div>
+  
+  
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 2.png' %}" alt="Snacks & Drinks">
+        </div>
+        <h3>Snacks & Drinks</h3>
+      </div>
+      <p>Fresh popcorn, nachos, and drinks to enjoy with your movie.</p>
+    </div>
+
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 3.png' %}" alt="Multiple Formats">
+        </div>
+        <h3>Multiple Formats</h3>
+      </div>
+      <p>Watch in 2D, 3D, or even IMAX for the ultimate cinema experience.</p>
+    </div>
+  
+  
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 4.png' %}" alt="Easy Booking">
+        </div>
+        <h3>Easy Booking</h3>
+      </div>
+      <p>Buy tickets online or at the cinema without long queues.</p>
+    </div>
+  
+  
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 5.png' %}" alt="Comfortable Seats">
+        </div>
+        <h3>Comfortable Seats</h3>
+      </div>
+      <p>Relax in premium, spacious, and modern halls.</p>
+    </div>
+  
+  
+    <div class="feature-box">
+      <div class="top-row">
+        <div class="icon-box">
+          <img src="{% static 'icons/icon 6.png' %}" alt="Special Events">
+        </div>
+        <h3>Special Events</h3>
+      </div>
+      <p>Night shows, film festivals, and exclusive screenings.</p>
+    </div>
+</div>
+</section>
+<section class="faq-section">
+    <div class="faq-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>
+        Got questions? We've got answers! Check out our FAQ section to find answers to the most common questions about StreamVibe.
+      </p>
+      <a href="{% url 'movies:contact' %}" class="ask-btn">Ask a Question</a>
+    </div>
+     <div class="faq-container">
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">01</span>
+            <h3>What is Cinemaxx?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Cinemaxx is a modern cinema chain that offers the ultimate movie experience with high-quality sound, crystal-clear screens, and comfortable seating.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">02</span>
+            <h3>How often do you update movie schedules?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Movie schedules are updated every Thursday with new releases and weekend timings.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">03</span>
+            <h3>Do you show movies in different languages?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Yes, we feature movies in multiple languages and offer both dubbed and subtitled versions when available.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">04</span>
+            <h3>Can I bring my own snacks or drinks?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Yes,absolutely! Also,our snack bar offers a wide range of treats and drinks.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-column">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">05</span>
+            <h3>What payment methods do you accept?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            We accept Visa, MasterCard, Apple Pay, Google Pay, and major local payment apps.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">06</span>
+            <h3>Do you offer group or student discounts?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Yes, group discounts are available for bookings of 10 or more people. Student discounts apply on weekdays with a valid student ID.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">07</span>
+            <h3>What are the benefits of becoming a member?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            Members enjoy exclusive discounts, early access to bookings, and free popcorn or drinks on special days.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span class="faq-number">08</span>
+            <h3>How can I contact customer support?</h3>
+            <img src="{% static 'icons/icon plus.png' %}" alt="toggle" class="icon" />
+          </div>
+          <div class="faq-answer">
+            You can reach us via the “Contact Us” page, email us at support@cinemaxx.com, or call our hotline at +1 (800) 555-CINE.
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const item = question.parentElement;
+      const icon = question.querySelector('.icon');
+
+      
+      document.querySelectorAll('.faq-item').forEach(otherItem => {
+        const otherIcon = otherItem.querySelector('.icon');
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+          if (otherIcon) {
+            otherIcon.src = "{% static 'icons/icon plus.png' %}"; 
+          }
+        }
+      });
+
+      
+      item.classList.toggle('active');
+      if (item.classList.contains('active')) {
+        icon.src = "{% static 'icons/icon minus.png' %}"; 
+      } else {
+        icon.src = "{% static 'icons/icon plus.png' %}"; 
+      }
+    });
+  });
+</script>
+
+<div class="horizontal-row">
+  <section class="ticket-banner"> 
+    <div class="banner-content">
+      <div class="text-content">
+        <h1>Book Your Tickets Today!</h1>
+        <p>Don't miss the latest blockbusters on the big screen with stunning sound and picture quality.</p>
+      </div>
+      <a href="{% url 'movies:movies' %}" class="book-btn">Book Now</a>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/categories.js' %}"></script>
+{% endblock %}

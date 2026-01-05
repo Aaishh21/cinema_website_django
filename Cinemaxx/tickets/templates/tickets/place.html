@@ -1,0 +1,204 @@
+{% extends "tickets/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/tickets/place.css' %}">
+{% endblock %}
+
+{% block content %}
+        <main class="center-panel">
+            <div class="screen-container">
+                <div class="screen-text">SCENE</div>
+                <div class="screen"></div>
+            </div>
+
+            <div class="seats-grid" id="seatsGrid">
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="background: var(--seat-available)"></div>
+                    <span>Available seat</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: var(--seat-occupied)"></div>
+                    <span>Occupied seat</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: var(--accent-red)"></div>
+                    <span>Your choice</span>
+                </div>
+            </div>
+        </main>
+
+    <script>
+        const grid = document.getElementById('seatsGrid');
+        const ticketList = document.getElementById('ticketList');
+        const totalAmountEl = document.getElementById('totalAmount');
+        
+        const bookedSeatsData = {{ booked_seats|safe }};
+        const hallSeatsData = {{ hall_seats|safe }};
+        const showtimeId = {{ showtime.id|default:"null" }};
+        
+        console.log('DEBUG: hallSeatsData=', hallSeatsData);
+        console.log('DEBUG: hallSeatsData length=', hallSeatsData ? hallSeatsData.length : 0);
+        console.log('DEBUG: bookedSeatsData=', bookedSeatsData);
+        
+        const selectedSet = new Set();
+        
+        const seatMap = {};
+        hallSeatsData.forEach(seat => {
+            seatMap[seat.id] = seat;
+        });
+
+        function renderTickets() {
+            ticketList.innerHTML = '';
+            
+            if (selectedSet.size === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'ticket-empty';
+                empty.style.color = '#666';
+                empty.style.fontSize = '13px';
+                empty.style.padding = '8px 0';
+                empty.textContent = 'No tickets selected';
+                ticketList.appendChild(empty);
+                totalAmountEl.textContent = '0 ₸';
+                return;
+            }
+
+            let total = 0;
+            Array.from(selectedSet).sort((a, b) => a - b).forEach(seatId => {
+                const seat = seatMap[seatId];
+                if (!seat) return;
+                
+                // Get price from seat object (from Django)
+                const price = parseFloat(seat.price);
+                total += price;
+
+                const item = document.createElement('div');
+                item.className = 'ticket-item';
+
+                const info = document.createElement('div');
+                info.className = 'ticket-info';
+                
+                const rowSpan = document.createElement('span');
+                rowSpan.className = 'row-num';
+                rowSpan.textContent = seat.row + ' row';
+                
+                const seatSpan = document.createElement('span');
+                seatSpan.className = 'seat-num';
+                seatSpan.textContent = seat.number + ' seat';
+                
+                info.appendChild(rowSpan);
+                info.appendChild(seatSpan);
+
+                const priceEl = document.createElement('div');
+                priceEl.className = 'price';
+                priceEl.textContent = price + ' ₸';
+
+                const remove = document.createElement('div');
+                remove.className = 'remove-btn';
+                remove.style.cursor = 'pointer';
+                remove.style.color = '#ccc';
+                remove.style.marginLeft = '8px';
+                remove.textContent = '✕';
+                remove.dataset.seatId = seatId;
+
+                item.appendChild(info);
+                item.appendChild(priceEl);
+                item.appendChild(remove);
+                ticketList.appendChild(item);
+            });
+
+            totalAmountEl.textContent = total + ' ₸';
+            
+            // Update hidden form input with selected seat IDs
+            document.getElementById('selectedSeats').value = JSON.stringify(Array.from(selectedSet));
+        }
+
+        // Create seat grid from database
+        console.log('DEBUG: Creating seats...');
+        console.log('DEBUG: hallSeatsData is empty?', !hallSeatsData || hallSeatsData.length === 0);
+        
+        if (!hallSeatsData || hallSeatsData.length === 0) {
+            console.error('ERROR: hallSeatsData is empty or undefined!');
+            grid.innerHTML = '<p style="color: red; text-align: center;">No seats available</p>';
+        } else {
+            hallSeatsData.forEach((seat, index) => {
+                const seatEl = document.createElement('div');
+                seatEl.className = 'seat';
+                seatEl.dataset.id = seat.id;
+                seatEl.dataset.row = seat.row;
+                seatEl.dataset.number = seat.number;
+
+                // Mark booked seats
+                if (bookedSeatsData.includes(seat.id)) {
+                    seatEl.classList.add('occupied');
+                }
+
+                // Click handler for seat selection
+                seatEl.addEventListener('click', () => {
+                    if (seatEl.classList.contains('occupied')) return;
+
+                    if (seatEl.classList.contains('selected')) {
+                        seatEl.classList.remove('selected');
+                        selectedSet.delete(seat.id);
+                    } else {
+                        seatEl.classList.add('selected');
+                        selectedSet.add(seat.id);
+                    }
+                    renderTickets();
+                });
+
+                grid.appendChild(seatEl);
+            });
+            console.log('DEBUG: Total seats created:', grid.children.length);
+        }
+
+        // Handle remove buttons in ticket list
+        ticketList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.remove-btn');
+            if (!btn) return;
+            
+            const seatId = parseInt(btn.dataset.seatId, 10);
+            if (isNaN(seatId)) return;
+
+            selectedSet.delete(seatId);
+            const seatEl = grid.querySelector(`[data-id="${seatId}"]`);
+            if (seatEl) {
+                seatEl.classList.remove('selected');
+            }
+            renderTickets();
+        });
+
+        // Initial render
+        renderTickets();
+
+        // Handle NEXT button click
+        document.querySelector('.btn-next').addEventListener('click', () => {
+            if (selectedSet.size === 0) {
+                alert('Please select at least one seat');
+                return;
+            }
+            document.getElementById('bookingForm').submit();
+        });
+
+        // Handle CANCEL button click
+        document.querySelector('.btn-cancel').addEventListener('click', () => {
+            document.getElementById('cancelForm').submit();
+        });
+    </script>
+
+    <!-- Hidden form for booking submission -->
+    <form id="bookingForm" method="POST" action="{% url 'tickets:create-booking' %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="showtime_id" value="{{ showtime.id }}">
+        <input type="hidden" id="selectedSeats" name="seats" value="[]">
+    </form>
+
+    <!-- Hidden form for cancel navigation -->
+    <form id="cancelForm" method="GET" action="{% url 'tickets:cancel-booking' %}" style="display: none;">
+        <input type="hidden" name="showtime_id" value="{{ showtime.id }}">
+    </form>
+
+{% endblock %}

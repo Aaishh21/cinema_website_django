@@ -1,0 +1,1093 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #141414;
+  font-family: "Manrope", sans-serif;
+  color: #fff;
+}
+
+header.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px; 
+}
+.logo img {
+  height: 30px;
+}
+.brand {
+  display: inline-block; 
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+.cine {
+  color: #fff;  
+}
+.maxx {
+  color: #891D1D; 
+}
+
+.menu-box {
+  display: flex;
+  gap: 25px;
+  font-family: "Manrope", sans-serif;
+  background: #000;              
+  padding: 14px 30px;
+  border-radius: 12px;
+  border: 3px solid #333333;      
+  margin-right: 7px;
+}
+.menu-box a {
+  text-decoration: none;
+  color: #ccc;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+.menu-box a:hover {
+  color: #fff;
+}
+.menu-box .active {
+  color: #fff;
+  font-weight: 400;
+}
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.icon:hover {
+  opacity: 0.7;
+}
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 60px;
+  background: #fff; 
+  color: #222;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  padding: 6px 0;
+  width: 220px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  z-index: 999;
+  overflow: hidden;   
+}
+
+.dropdown-item {
+    color: #222;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #a8a8a8;
+}
+
+.hero {
+  position: relative;
+  background: url("/static/pics/home.png") center/cover no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); 
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2; 
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.hero-content h1 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  margin-top: 600px;
+}
+
+.hero-content p {
+  font-family: "Manrope", sans-serif;
+  color: #999999;
+  font-weight: 400;
+  max-width: 700px;
+  margin: 0 auto 20px auto;
+  margin-top: 10px;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 12px 25px;
+  background: red;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  margin-top: 15px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: darkred;
+  text-decoration: none;
+}
+
+
+
+
+.categories-header {
+  display: flex;
+  flex-direction: column;
+  padding: 40px 60px 20px;
+}
+
+.categories-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.categories-text {
+  max-width: 70%;
+  margin-left: 80px;
+}
+
+.categories-text h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.categories-text p {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #999;
+}
+
+.slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: 2px solid #333;
+  gap: 10px;
+  width: fit-content;
+  margin-right: 31px;
+}
+
+.arrow-btn {
+  background: #111;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.arrow-btn:hover {
+  background: #222;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 14px;
+  height: 3px;
+  background: #555;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.dot.active {
+  background: red;
+  width: 18px;
+}
+
+.categories-wrapper {
+  width: 100%;
+  overflow: hidden;
+  max-width: 100vw;
+}
+
+.categories-container {
+  display: flex;
+  gap: 60px;
+  flex-wrap: nowrap;
+  padding-bottom: 30px;
+  margin-top: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(0);
+}
+
+.categories-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* CATEGORY CARD (merged into one block) */
+.category-card {
+  position: relative;
+  cursor: pointer;
+  background: #1A1A1A;
+  border: 2px solid #262626;
+  border-radius: 12px;
+  padding: 12px;
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+}
+
+/* FULL CLICKABLE OVERLAY */
+.card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: block;
+  background: transparent;
+}
+
+/* IMAGE GRID */
+.card-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px;
+}
+
+.card-images img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* FOOTER */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-footer h3 {
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.arrow {
+  font-size: 18px;
+  color: #fff;
+}
+
+.section h2{
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  margin-left: 80px;
+}
+.section p{
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #999;
+  margin-left: 80px;
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(2, auto);   
+  gap: 20px;
+  justify-items: center;
+  margin-left: 50px;
+  margin-top: 50px;
+}
+
+.feature-box {
+  background: linear-gradient(135deg, rgba(24, 14, 14, 0.9), rgba(15, 15, 15, 0.95));
+  width: 360px;
+  padding: 20px;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.feature-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+}
+
+.feature-box:hover .icon-box {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-box {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111;
+  border-radius: 10px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.icon-box img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.feature-box h3 {
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 600;
+  margin: 0;
+}
+
+.feature-box p {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: #aaa;
+  line-height: 1.5;
+  margin: 0;
+}
+.faq-section {
+  padding: 60px 80px;
+}
+
+.faq-header {
+  text-align: left;
+  margin-bottom: 50px;
+  position: relative;
+  margin-left: 80px;
+}
+
+.faq-header h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.faq-header p {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: #999999;
+  max-width: 700px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.ask-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-right: 70px;
+  margin-top: 10px;
+  text-decoration: none;
+  display: inline-block;
+}
+.ask-btn:hover {
+  background: #ff3333;
+  text-decoration: none;
+}
+.faq-container {
+  display: flex;
+  gap: 60px;
+  justify-content: space-between;
+}
+
+.faq-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.faq-item {
+
+  border-bottom: 1px solid red;     
+  width: 80%;                       
+  padding-bottom: 10px;           
+  margin-left: 80px;           
+}
+
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.faq-number {
+  background: #1a1a1a;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  margin-right: 15px;
+}
+
+.faq-question h3 {
+  flex: 1;
+  font-size: 16px;
+  margin: 0;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1); 
+  transition: transform 0.3s ease;
+}
+
+.faq-answer {
+  display: none;
+  color: #ccc;
+  margin-top: 8px;
+  margin-left: 45px;
+  line-height: 1.5;
+}
+
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+.faq-item.active .icon {
+  transform: rotate(180deg);
+}
+
+
+
+.horizontal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+
+.ticket-banner {
+  position: relative;
+  display: flex;
+  width: 1242px;
+  height: 240px;
+  align-items: center;
+  background: url("ticket banner.png") center/cover no-repeat;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-left: 160px;
+}
+
+.ticket-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(255,0,0,0.3) 100%);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 60px;
+}
+
+.text-content {
+  max-width: 700px;
+  
+  
+}
+
+.text-content h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.text-content p {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #999999;
+}
+
+.book-btn {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #E50000;
+  color: #fff;
+  padding: 12px 26px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.book-btn:hover {
+  background-color: #ff1c24;
+  transform: scale(1.05);
+}
+
+.section,
+.ticket-banner,
+.categories-header,
+.categories-container,
+.cinemaxx-footer {
+  padding-left: 80px;
+  padding-right: 80px;
+}
+.footer {
+  background-color: #0f0f0f;
+  color: #fff;
+  padding: 40px 20px;
+  font-family: "Manrope", sans-serif;
+  margin-top: 50px;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer-branding {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  margin-top: 50px;
+  flex: 1;
+  min-width: 200px;
+  height: auto;
+  margin-bottom: 60px;
+}
+
+.footer-branding .logo {
+  width: 40px; 
+  height: 40px;
+}
+
+.footer-branding .brand-text {
+  font-size: 28px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  color: #fff;
+}
+
+.footer-branding .brand-text span {
+  color: #ff2a2a; 
+}
+
+
+.footer-links {
+  display: flex;
+  flex: 2;
+  gap: 160px;
+  margin-right: 200px;
+}
+
+.footer-column h3 {
+  font-family: "Manrope", sans-serif;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 8px;
+}
+
+.footer-column ul li a {
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+  color: #999999;
+  text-decoration: none;
+}
+
+.footer-column ul li a:hover {
+  color: #fff;
+}
+
+.footer-social {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-social h3 {
+  font-family: "Manrope", sans-serif;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.social-icons a img {
+  width: 35px;
+  margin-right: 10px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #999999;
+  margin-top: 30px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #999999;
+}
+
+.legal-links a {
+  margin-left: 20px;
+  color: #999999;
+  text-decoration: none;
+}
+
+.burger {
+  display: none; 
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1010; 
+}
+
+.burger span {
+  width: 2rem;
+  height: 0.25rem;
+  background: #fff;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg);
+}
+.burger.active span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 1200px) {
+    
+    .section,
+    .ticket-banner,
+    .categories-header,
+    .cinemaxx-footer,
+    .faq-section {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    
+    .features {
+        grid-template-columns: repeat(2, 1fr); 
+        margin-left: 0;
+        padding: 0 20px;
+    }
+
+    .feature-box {
+        width: 100%; 
+    }
+
+    .ticket-banner {
+        width: auto; 
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+}
+@media (max-width: 992px) {
+    
+    .menu-box {
+        display: none; 
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 60%;
+        height: 100vh;
+        background: #141414;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        border: none;
+        border-radius: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1005; 
+    }
+
+    .menu-box.active {
+        display: flex; 
+        transform: translateX(0);
+    }
+    
+    .menu-box a {
+        font-size: 18px; 
+    }
+
+    .icons {
+        display: none; 
+    }
+    .burger {
+        display: flex; 
+    }
+    .categories-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .categories-text {
+        max-width: 100%;
+        margin-left: 0;
+    }
+    
+    .slider-controls {
+        margin-right: 100px;
+        align-self: flex-end; 
+    }
+
+    .faq-container {
+        flex-direction: column; 
+        gap: 15px;
+    }
+    
+    .faq-item {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .section,
+    .ticket-banner,
+    .categories-header,
+    .cinemaxx-footer,
+    .faq-section {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    header.navbar {
+        padding: 15px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+        margin-top: 20vh; 
+    }
+
+    .hero-content p {
+        font-size: 14px;
+    }
+    .categories-header, .categories-header p {
+      text-align: center;
+      margin-left: 0;
+    }
+    
+    .features {
+        grid-template-columns: 1fr; 
+    }
+
+    .section h2, .section p {
+        margin-left: 0;
+        text-align: center; 
+    }
+    
+    .faq-header {
+        text-align: center;
+        margin-left: 0;
+    }
+    
+    .faq-header .ask-btn {
+        position: static; 
+        margin: 20px auto 0;
+        display: block; 
+    }
+    
+    .ticket-banner {
+        height: auto;
+        padding: 40px 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        text-align: center;
+    }
+
+    .banner-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+    
+    .footer-container, .footer-links, .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+  .footer-branding {
+      justify-content: center;
+      margin-right: 0;
+  }
+  .footer-links {
+      gap: 30px;
+      margin-right: 0;
+  }
+  .legal-links a {
+      margin: 5px 0;
+  }
+  .popup {
+        width: 90%; 
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        height: 25px;
+    }
+    .brand {
+        font-size: 14px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+    }
+
+    .hero-content p {
+        font-size: 12px;
+    }
+    
+    .btn, .book-btn, .ask-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .categories-text h2, .section h2, .faq-header h1, .text-content h1 {
+        font-size: 22px;
+    }
+
+    .categories-text p, .section p, .faq-header p, .text-content p {
+        font-size: 12px;
+    }
+    
+    .category-card {
+        width: 180px; 
+    }
+}
+
+.profile-dropdown {
+  position: relative;
+  margin-left: 20px;
+}
+
+.profile-btn {
+  background: #0d0d0d;
+  border: 3px solid #F00000;
+  color: white;
+  padding: 6px 10px; 
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s;
+}
+
+.profile-btn:hover {
+  background: #F00000;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+.arrow svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  transition: transform 180ms ease;
+  transform-origin: 50% 50%;
+}
+
+.profile-btn .profile-name {
+  display: inline-block;
+  background: #F00000;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 999px;
+  font-size: 15px; 
+  font-weight: 700;
+  line-height: 1;
+}
+
+.profile-btn .arrow svg path { stroke: #ffffff; }
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 60px;
+  background: #fff;
+  color: #222;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  display: none;
+  flex-direction: column;
+  padding: 6px 0;
+  width: 220px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  z-index: 999;
+  overflow: hidden;
+}
+
+.dropdown-menu::before{
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 18px; 
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  transform: rotate(45deg);
+  border-left: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.dropdown-menu a {
+  color: #222;
+  padding: 18px 20px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dropdown-menu a:last-child{ 
+  border-bottom: none; 
+}
+
+.dropdown-menu a:hover{ 
+  background: rgba(0,0,0,0.03) 
+}
+
+.profile-dropdown.open .dropdown-menu{ 
+  display: flex 
+}
+.profile-dropdown.open .arrow svg{ 
+  transform: rotate(180deg); 
+  transition: transform 180ms ease 
+}

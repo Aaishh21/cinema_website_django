@@ -1,0 +1,334 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/movies/movies.css' %}" /> 
+  <link rel="stylesheet" href="{% static 'css/movies/filter.css' %}" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<section class="poster" id="poster">
+  {% for movie in hero_movies %}
+  <div class="hero-slide {% if forloop.first %}active{% endif %}">
+    
+    {% if movie.horizontal_poster %}
+    <img src="{{ movie.horizontal_poster.url }}" alt="{{ movie.title }}" class="hero-bg-img">
+    {% elif movie.poster %}
+    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="hero-bg-img">
+    {% endif %}
+    
+    <div class="overlay"></div>
+    
+    <div class="content">
+      <h1 class="title">{{ movie.title }}</h1>
+      <p class="description">{{ movie.description }}</p>
+
+      <div class="buttons">
+        <a href="{% url 'movies:movie' movie.id %}" class="play-btn">
+          <img src="{% static 'icons/play now icon.png' %}" alt="">
+          Play Now
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="dots" id="dots">
+    {% for movie in hero_movies %}
+      <div class="dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="trending">
+    <h2 class="trending-title"><span class="red-line">|</span> Trending Now</h2>
+
+    <div class="trending-slider-container">
+        <button class="trend-arrow left" id="trendPrev">&#10094;</button>
+
+        <div class="trend-window">
+            <div class="trend-slider" id="trendSlider">
+                
+                {% for movie in trending %}
+                <a href="{% url 'movies:movie' movie.id %}" class="trend-card">
+                    <div class="trend-poster">
+                        {% if movie.poster %}
+                            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="trend-tags">
+                        {% if movie.genre %}
+                        <span class="trend-tag {{ movie.genre.name|lower }}">
+                            {{ movie.genre.name }}
+                        </span>
+                        {% endif %}
+                        <span class="trend-age">{{ movie.age_rating }}</span>
+                    </div>
+                    <h3 class="trend-name">{{ movie.title }}</h3>
+                    <p class="trend-date">In cinemas {{ movie.release_date|date:"d.m.Y" }}</p>
+                </a>
+                
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <button class="trend-arrow right" id="trendNext">&#10095;</button>
+    </div>
+</section>
+<section class="coming-soon-section">
+  <div class="coming-header">
+    <h2 class="coming-title"><span class="red-line">|</span> Coming soon</h2>
+  </div>
+  <div class="coming-container" id="comingContainer">
+    {% for movie in coming_soon_movies %}
+    <div class="coming-card">
+      {% if movie.poster %}
+      <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+      {% endif %}
+      <div class="release-box">Released at {{ movie.release_date|date:"d M, Y" }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="filter-section">
+  <div class="filter-container">
+    <h2 class="filter-title"><span class="red-line">|</span> Browse Movies</h2>
+    
+    <div class="filter-controls">
+      <form method="GET" action="{% url 'movies:movies' %}" class="filter-form">
+        <div class="filter-group">
+          <label for="genreFilter">Genre</label>
+          <select id="genreFilter" name="genre" class="filter-select">
+            <option value="">All Genres</option>
+            {% for genre in genres %}
+              <option value="{{ genre.id }}" {% if selected_genre|stringformat:"s" == genre.id|stringformat:"s" %}selected{% endif %}>
+                {{ genre.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="ratingFilter">Minimum Rating</label>
+          <select id="ratingFilter" name="rating" class="filter-select">
+            <option value="">All Ratings</option>
+            <option value="9" {% if selected_rating == '9' %}selected{% endif %}>9.0+ ⭐</option>
+            <option value="8" {% if selected_rating == '8' %}selected{% endif %}>8.0+ ⭐</option>
+            <option value="7" {% if selected_rating == '7' %}selected{% endif %}>7.0+ ⭐</option>
+            <option value="6" {% if selected_rating == '6' %}selected{% endif %}>6.0+ ⭐</option>
+            <option value="5" {% if selected_rating == '5' %}selected{% endif %}>5.0+ ⭐</option>
+          </select>
+        </div>
+
+        <button type="submit" class="filter-btn">Apply Filters</button>
+        <a href="{% url 'movies:movies' %}" class="filter-reset">Clear Filters</a>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% if filtered_movies %}
+<section class="filtered-movies-section">
+  <div class="filtered-container">
+    <h3 class="filtered-title">Results ({{ filtered_movies.count }} movies)</h3>
+    
+    <div class="movies-grid">
+      {% for movie in page_obj %}
+      <a href="{% url 'movies:movie' movie.id %}" class="movie-card">
+        <div class="movie-poster">
+          {% if movie.poster %}
+            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+          {% else %}
+            <div class="placeholder-poster"></div>
+          {% endif %}
+          <div class="movie-overlay">
+            <button class="play-icon">▶</button>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h3 class="movie-title">{{ movie.title }}</h3>
+          <p class="movie-genre">{{ movie.genre.name }}</p>
+          <p class="movie-rating">{{ movie.age_rating }}+</p>
+          {% if movie.is_coming_soon %}
+            <span class="coming-badge">Coming Soon</span>
+          {% else %}
+            <span class="available-badge">Available</span>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page=1{% if selected_genre %}&genre={{ selected_genre }}{% endif %}{% if selected_rating %}&rating={{ selected_rating }}{% endif %}" class="page-link">« First</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if selected_genre %}&genre={{ selected_genre }}{% endif %}{% if selected_rating %}&rating={{ selected_rating }}{% endif %}" class="page-link">‹ Previous</a>
+      {% endif %}
+
+      <span class="page-info">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if selected_genre %}&genre={{ selected_genre }}{% endif %}{% if selected_rating %}&rating={{ selected_rating }}{% endif %}" class="page-link">Next ›</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_genre %}&genre={{ selected_genre }}{% endif %}{% if selected_rating %}&rating={{ selected_rating }}{% endif %}" class="page-link">Last »</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% else %}
+<section class="filtered-movies-section">
+  <div class="filtered-container">
+    <div class="no-results">
+      <p>No movies found matching your filters.</p>
+      <a href="{% url 'movies:movies' %}" class="reset-link">Clear filters and try again</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<div class="horizontal-row">
+  <section class="ticket-banner">  
+    <div class="banner-content">
+      <div class="text-content">
+        <h1>Book Your Tickets Today!</h1>
+        <p>Don't miss the latest blockbusters on the big screen with stunning sound and picture quality.</p>
+      </div>
+      <a href="#" class="book-btn">Book Now</a>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function() {
+    const slider = document.getElementById("trendSlider");
+    const nextBtn = document.getElementById("trendNext");
+    const prevBtn = document.getElementById("trendPrev");
+
+    const visible = 5;                         
+    const originals = Array.from(slider.children); 
+
+    if (originals.length <= visible) {
+      
+      return;
+    }
+
+    const prependClones = originals.slice(-visible).map(node => node.cloneNode(true));
+    const appendClones  = originals.slice(0, visible).map(node => node.cloneNode(true));
+
+    prependClones.forEach(clone => slider.insertBefore(clone, slider.firstChild));
+    appendClones.forEach(clone => slider.appendChild(clone));
+
+    const totalItems = slider.children.length;       
+    const originalCount = originals.length;
+
+    function calcStep() {
+      const firstRect = slider.children[0].getBoundingClientRect();
+      const secondRect = slider.children[1].getBoundingClientRect();
+      const step = Math.round(secondRect.left - firstRect.left); 
+      return step;
+    }
+
+    let step = calcStep();
+
+    window.addEventListener('resize', () => {
+      step = calcStep();
+    
+      slider.style.transition = 'none';
+      slider.style.transform = `translateX(${-currentIndex * step}px)`;
+    
+      slider.getBoundingClientRect();
+      slider.style.transition = '';
+    });
+
+    
+    let currentIndex = visible;
+    slider.style.transform = `translateX(${-currentIndex * step}px)`;
+
+    
+    let isAnimating = false;
+    function goToIndex(idx) {
+      if (isAnimating) return;
+      isAnimating = true;
+      slider.style.transition = 'transform 0.35s ease';
+      currentIndex = idx;
+      slider.style.transform = `translateX(${-currentIndex * step}px)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      goToIndex(currentIndex + 1);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      goToIndex(currentIndex - 1);
+    });
+
+    slider.addEventListener('transitionend', () => {
+      isAnimating = false;
+
+      
+      if (currentIndex === visible + originalCount) {
+      
+        slider.style.transition = 'none';
+        currentIndex = visible;
+        slider.style.transform = `translateX(${-currentIndex * step}px)`;
+
+        slider.getBoundingClientRect();
+        slider.style.transition = 'transform 0.35s ease';
+        return;
+      }
+
+      if (currentIndex === 0) {
+        
+        slider.style.transition = 'none';
+        currentIndex = originalCount;
+        slider.style.transform = `translateX(${-currentIndex * step}px)`;
+        slider.getBoundingClientRect();
+        slider.style.transition = 'transform 0.35s ease';
+        return;
+      }
+    });
+
+    let startX = 0;
+    let deltaX = 0;
+    let isDown = false;
+
+    slider.addEventListener('pointerdown', e => {
+      isDown = true;
+      startX = e.clientX;
+      slider.style.transition = 'none';
+    });
+    window.addEventListener('pointermove', e => {
+      if (!isDown) return;
+      deltaX = e.clientX - startX;
+      slider.style.transform = `translateX(${ -currentIndex * step + deltaX }px)`;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!isDown) return;
+      isDown = false;
+      slider.style.transition = 'transform 0.25s ease';
+      if (Math.abs(deltaX) > step / 4) {
+      
+        if (deltaX < 0) goToIndex(currentIndex + 1);
+        else goToIndex(currentIndex - 1);
+      } else {
+        
+        slider.style.transform = `translateX(${-currentIndex * step}px)`;
+      }
+      deltaX = 0;
+    });
+
+  })();
+</script>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/poster.js' %}"></script>
+{% endblock %}

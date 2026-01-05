@@ -1,0 +1,84 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+  <main class="container register-page">
+    <h1 class="register-h1">Sign in to <span class="highlight">Cinemax</span></h1>
+
+    <form action="{% url 'users:register' %}" method="post" novalidate>
+      {% csrf_token %}
+      
+      {% if form.errors %}
+        <div style="color: red; margin-bottom: 20px; padding: 10px; background: #ffe6e6; border-radius: 5px;">
+          <strong>Errors:</strong>
+          <ul>
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <li><strong>{{ field }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      
+      <div class="field">
+        <label for="full_name">Full Name</label>
+        <input id="full_name" name="full_name" type="text" placeholder="Enter your full name" />
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input id="email" name="email" type="email" placeholder="Enter your email" />
+      </div>
+
+      <div class="field">
+        <label for="phone_number">Phone Number</label>
+        <input id="phone_number" name="phone_number" type="tel" placeholder="Enter your phone number" />
+      </div>
+
+      <div class="field">
+        <label for="password1">Password</label>
+        <input id="password1" name="password1" type="password" placeholder="" />
+        <span class="eye-icon" role="button" tabindex="0" aria-label="Toggle password visibility" aria-pressed="false">
+          <!-- Closed-eye SVG (default visible) -->
+          <svg class="icon-closed" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.2" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000" aria-hidden="true">
+            <path d="M19.5 16L17.0248 12.6038" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M12 17.5V14" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M4.5 16L6.96895 12.6124" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M3 8C6.6 16 17.4 16 21 8" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+
+          <!-- Open-eye SVG (hidden by default, will show when password is visible) -->
+          <svg class="icon-open hidden" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000" aria-hidden="true">
+            <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="password2">Confirm Password</label>
+        <input id="password2" name="password2" type="password" placeholder="" />
+        <span class="eye-icon" role="button" tabindex="0" aria-label="Toggle password visibility" aria-pressed="false">
+          <!-- Closed-eye SVG (default visible) -->
+          <svg class="icon-closed" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.2" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000" aria-hidden="true">
+            <path d="M19.5 16L17.0248 12.6038" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M12 17.5V14" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M4.5 16L6.96895 12.6124" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M3 8C6.6 16 17.4 16 21 8" stroke="#000000" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+
+          <!-- Open-eye SVG (hidden by default, will show when password is visible) -->
+          <svg class="icon-open hidden" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000" aria-hidden="true">
+            <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+      </div>
+
+      <button class="btn" type="submit">Create account</button>
+
+      <p class="links">Already have an account? <a href="{% url 'users:login' %}">Log in</a></p>
+    </form>
+  </main>
+{% endblock %}

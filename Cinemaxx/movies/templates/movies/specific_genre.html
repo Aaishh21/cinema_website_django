@@ -1,0 +1,56 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/movies/genre.css' %}">
+  <link rel="stylesheet" href="{% static 'css/movies/homepage.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    <h1 class="title">{{ genre.name }}</h1>
+
+    <div class="stroke">
+
+        <div class="container">
+            {% if movies %}
+                {% for movie in movies %}
+                    <a href="{% url 'movies:movie' movie.id %}" class="movie-link">
+                        <div class="movie-card">
+                            {% if movie.poster %}
+                                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="poster">
+                            {% else %}
+                                <img src="https://via.placeholder.com/150x200?text=No+Image" alt="{{ movie.title }}" class="poster">
+                            {% endif %}
+                            <div class="info">
+                                <h2>{{ movie.title }}, <span class="year">{{ movie.release_date.year }}</span></h2>
+                                <p>{{ movie.duration }} minutes</p>
+                                {% if movie.directors %}
+                                    <p><strong>Director:</strong> {{ movie.directors }}</p>
+                                {% endif %}
+                                {% if movie.cast %}
+                                    <p><strong>In cast:</strong> {{ movie.cast }}</p>
+                                {% endif %}
+                            </div>
+                            {% if movie.rating %}
+                                {% if movie.rating >= 7 %}
+                                    <div class="rating green">{{ movie.rating }}</div>
+                                {% elif movie.rating >= 5 %}
+                                    <div class="rating yellow">{{ movie.rating }}</div>
+                                {% else %}
+                                    <div class="rating red">{{ movie.rating }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <p>No movies found in this genre.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+  <button class="more-btn">More</button>
+
+{% endblock %}

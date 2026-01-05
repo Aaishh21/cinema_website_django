@@ -1,0 +1,430 @@
+{% extends "movies/base.html" %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/movies/style.css' %}" /> 
+{% endblock %}
+
+{% block content %}
+    {% if movie %}
+    <div class="video-container">
+      <img src="{% static 'pics/film description.png' %}" alt="Qaitadan Thumbnail" class="thumbnail" id="thumbnail">
+      
+      <div class="play-button" id="playButton">
+        <div class="triangle"></div>
+      </div>
+      
+      <video id="filmVideo" class="film-video" controls>
+        {% if movie.trailer %}
+          <source src="{{ movie.trailer.url }}" type="video/mp4" />
+        {% else %}
+          <source src="{% static 'videos/трейлер кайтадан.mp4' %}" type="video/mp4" />
+        {% endif %}
+      </video>
+      
+      <div class="film-info">
+        <span class="tag">Film</span>
+        <span class="tag">{{ movie.age_rating }}</span>
+        <h2>{{ movie.title|upper }}</h2>
+      </div>
+    </div>
+    <script src="{% static 'js/video.js' %}"></script>
+    
+    <section class="film-description">
+      <div class="poster">
+        <img src="{{ movie.poster.url }}" alt="Poster">
+      </div>
+
+    <div class="details">
+      <h1>{{ movie.title|upper }}</h1>
+      <p class="genre">
+        {% if movie.genre %}
+          {{ movie.genre.name }}
+        {% else %}
+          No genre
+        {% endif %}
+      </p>
+
+      <div class="meta">
+        <p><strong>Year of production:</strong> <span>{{ movie.release_date|date:"F d, Y" }}</span></p>
+        <p><strong>Duration:</strong> <span>{{ movie.duration }} minutes</span></p>
+        {% if movie.directors %}
+          <p><strong>Director:</strong> <span>{{ movie.directors }}</span></p>
+        {% endif %}
+        {% if movie.cast %}
+          <p><strong>Cast:</strong> <span>{{ movie.cast }}</span></p>
+        {% endif %}
+      </div>
+
+      <h2>About the film</h2>
+      <p class="description">
+        {{ movie.description }}
+      </p>
+    </div>
+  </section>
+  <section class="rating-review-box">
+  <div class="rating-header">
+    <h2>User Rating</h2>
+    <div class="rating-score">{{ movie.rating }}<span>/10</span></div>
+  </div>
+
+  <div class="rating-static">★★★★★</div>
+
+  <h3 class="reviews-title">Comments</h3>
+
+  {% if user.is_authenticated %}
+  <div class="add-comment-section">
+    <form id="commentForm" action="{% url 'movies:add_comment' movie.id %}" method="POST" novalidate>
+      {% csrf_token %}
+      <div class="comment-input-group">
+        <span class="comment-user">{{ user.username }}</span>
+        <textarea id="commentText" name="comment_text" placeholder="Share your thoughts about this movie..." rows="3" required></textarea>
+        <button type="submit" class="comment-submit-btn">Post Comment</button>
+      </div>
+    </form>
+    <div id="commentMessage" style="display:none; margin-top:10px; padding:10px; border-radius:5px;"></div>
+  </div>
+  {% else %}
+  <div class="login-prompt">
+    <p><a href="{% url 'users:login' %}">Log in</a> to add a comment</p>
+  </div>
+  {% endif %}
+
+  <div class="comments-list">
+    {% if comments %}
+      {% for comment in comments %}
+      <div class="review-item comment-item" data-comment-id="{{ comment.id }}">
+        <div class="review-top">
+          <div class="review-user">{{ comment.user.username }} • {{ comment.created_at|date:"M d, Y H:i" }}</div>
+          {% if user.is_authenticated and user.id == comment.user.id %}
+          <button class="delete-comment-btn" data-comment-id="{{ comment.id }}" title="Delete comment">×</button>
+          {% endif %}
+        </div>
+        <p>{{ comment.text }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="review-item">
+        <p>No comments yet. Be the first to comment!</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+<section class="schedule">
+  <h2 class="schedule-title">SCHEDULE</h2>
+  
+  {% if showtimes %}
+    <div class="schedule-dates" id="scheduleDates">
+      {% regroup showtimes by start_time|date:"Y-m-d" as showtimes_by_date %}
+      {% for group in showtimes_by_date %}
+        <div class="date-item" data-date="{{ group.grouper }}">
+          {% with first_showtime=group.list.0 %}
+            {% with showtime_date=first_showtime.start_time %}
+              <p class="day">{{ showtime_date|date:"l"|upper }}</p>
+              <h3>{{ showtime_date|date:"d" }}</h3>
+              <p class="month">{{ showtime_date|date:"M" }}</p>
+            {% endwith %}
+          {% endwith %}
+        </div>
+      {% endfor %}
+    </div>
+    
+    <div class="date-icon">
+      <img src="{% static 'icons/icon right.png' %}" alt="icon" />
+    </div>
+    
+    <div class="hall">
+      <div class="time-slots" id="timeSlots" data-place-url="{% url 'tickets:place' %}">
+        {% regroup showtimes by start_time|date:"Y-m-d" as showtimes_by_date %}
+        {% for group in showtimes_by_date %}
+          {% for showtime in group.list %}
+            <a href="{% url 'tickets:place' %}?showtime_id={{ showtime.id }}" class="time" data-date="{{ group.grouper }}" data-time="{{ showtime.start_time|date:'H:i' }}" {% if not forloop.parentloop.first %}style="display: none;"{% endif %}>
+              {{ showtime.start_time|date:"H:i" }}<br><small>{{ showtime.hall.name }}</small>
+            </a>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 20px; color: #999;">
+      <p>No showtimes available for this movie.</p>
+    </div>
+  {% endif %}
+</section>
+
+    {% else %}
+      <div style="text-align: center; padding: 40px; color: #999;">
+        <p>Movie not found.</p>
+        <a href="{% url 'movies:homepage' %}" style="color: #e74c3c; text-decoration: none;">Back to home</a>
+      </div>
+    {% endif %}
+
+<script>
+  // Handle date switching for showtimes
+  document.addEventListener('DOMContentLoaded', () => {
+    const dateItems = document.querySelectorAll('.date-item');
+    const timeSlots = document.getElementById('timeSlots');
+    
+    if (dateItems.length > 0) {
+      // Mark first date as active
+      dateItems[0].classList.add('active');
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dateItems[0].appendChild(dot);
+    }
+    
+    // Add click event to switch between dates
+    dateItems.forEach((dateItem, index) => {
+      dateItem.addEventListener('click', () => {
+        // Remove active class and dots from all date items
+        dateItems.forEach(item => {
+          item.classList.remove('active');
+          const existingDot = item.querySelector('.dot');
+          if (existingDot) {
+            existingDot.remove();
+          }
+        });
+        
+        // Add active class and dot to clicked item
+        dateItem.classList.add('active');
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dateItem.appendChild(dot);
+        
+        // Update time slots for selected date
+        const selectedDate = dateItem.getAttribute('data-date');
+        const allTimeSlots = document.querySelectorAll('.time');
+        
+        allTimeSlots.forEach(slot => {
+          const slotDate = slot.getAttribute('data-date');
+          if (slotDate === selectedDate) {
+            slot.style.display = 'block';
+          } else {
+            slot.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<script>
+  // Make time slots clickable
+  document.addEventListener('DOMContentLoaded', () => {
+    const timeSlots = document.querySelectorAll('.time');
+    const timeSlotsContainer = document.getElementById('timeSlots');
+    const placeUrl = timeSlotsContainer ? timeSlotsContainer.getAttribute('data-place-url') : '/tickets/place/';
+    
+    timeSlots.forEach(slot => {
+      slot.style.cursor = 'pointer';
+      slot.addEventListener('click', () => {
+        // Remove active class from all time slots
+        timeSlots.forEach(s => s.classList.remove('active'));
+        
+        // Add active class to clicked time slot
+        slot.classList.add('active');
+        
+        // Get the selected time
+        const selectedTime = slot.textContent.trim();
+        console.log('Selected time:', selectedTime);
+        
+        // Redirect to place page with the selected time as a query parameter
+        window.location.href = placeUrl + '?time=' + encodeURIComponent(selectedTime);
+      });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const thumbnail = document.getElementById('thumbnail');
+    const playButton = document.getElementById('playButton');
+    const filmVideo = document.getElementById('filmVideo');
+
+    if (thumbnail && playButton && filmVideo) {
+      playButton.addEventListener('click', () => {
+      
+        thumbnail.style.display = 'none';
+        playButton.style.display = 'none';
+
+    
+        filmVideo.style.display = 'block';
+        filmVideo.play();
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Rating Handler
+    let selectedRating = 0;
+    const stars = document.querySelectorAll("#ratingStars span");
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    const submitBtn = document.getElementById("submitReview");
+    const reviewText = document.getElementById("reviewText");
+
+    if (stars.length > 0 && submitBtn) {
+      stars.forEach(star => {
+          star.addEventListener("click", () => {
+              selectedRating = star.dataset.value;
+
+              stars.forEach(s => s.classList.remove("selected"));
+              for(let i = 0; i < selectedRating; i++){
+                  stars[i].classList.add("selected");
+              }
+          });
+      });
+
+      submitBtn.addEventListener("click", () => {
+          if (selectedRating == 0 || reviewText.value.trim() === "") {
+              alert("Please select a rating and write a review.");
+              return;
+          }
+
+          const review = document.createElement("div");
+          review.classList.add("review-item");
+
+          review.innerHTML = `
+              <div class="stars">${"★".repeat(selectedRating)}</div>
+              <p>${reviewText.value}</p>
+          `;
+
+          reviewsContainer.prepend(review);
+
+          reviewText.value = "";
+          selectedRating = 0;
+          stars.forEach(s => s.classList.remove("selected"));
+      });
+    }
+
+    // Comment Form Handler
+    const commentForm = document.getElementById('commentForm');
+    if (commentForm) {
+      commentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Comment form submitted via AJAX');
+        
+        const formData = new FormData(this);
+        const commentMessage = document.getElementById('commentMessage');
+        
+        fetch(this.action, {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => {
+          console.log('Response status:', response.status);
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || 'Server error');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Response data:', data);
+          if (data.success) {
+            // Add new comment to the list
+            const commentsList = document.querySelector('.comments-list');
+            const noCommentsDiv = commentsList.querySelector('.review-item:only-child');
+            
+            const newComment = document.createElement('div');
+            newComment.classList.add('review-item', 'comment-item');
+            newComment.innerHTML = `
+              <div class="review-top">
+                <div class="review-user">${data.comment.username} • ${data.comment.created_at}</div>
+              </div>
+              <p>${data.comment.text}</p>
+            `;
+            
+            if (noCommentsDiv && noCommentsDiv.querySelector('p')?.textContent.includes('No comments')) {
+              commentsList.removeChild(noCommentsDiv);
+            }
+            commentsList.prepend(newComment);
+            
+            // Clear form and show success message
+            document.getElementById('commentText').value = '';
+            commentMessage.style.display = 'block';
+            commentMessage.style.backgroundColor = '#4CAF50';
+            commentMessage.style.color = 'white';
+            commentMessage.textContent = 'Comment posted successfully!';
+            
+            setTimeout(() => {
+              commentMessage.style.display = 'none';
+            }, 3000);
+          } else {
+            commentMessage.style.display = 'block';
+            commentMessage.style.backgroundColor = '#f44336';
+            commentMessage.style.color = 'white';
+            commentMessage.textContent = data.message || 'Error posting comment';
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+          commentMessage.style.display = 'block';
+          commentMessage.style.backgroundColor = '#f44336';
+          commentMessage.style.color = 'white';
+          commentMessage.textContent = 'Error posting comment: ' + error.message;
+        });
+      });
+    }
+
+    // Delete Comment Handler
+    const deleteButtons = document.querySelectorAll('.delete-comment-btn');
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const commentId = this.getAttribute('data-comment-id');
+        
+        if (confirm('Are you sure you want to delete this comment?')) {
+          fetch(`{% url 'movies:delete_comment' 0 %}`.replace('0', commentId), {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+          })
+          .then(response => {
+            console.log('Delete response status:', response.status);
+            if (!response.ok) {
+              return response.json().then(data => {
+                throw new Error(data.message || 'Failed to delete comment');
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Delete response:', data);
+            if (data.success) {
+              // Remove comment from DOM
+              const commentDiv = document.querySelector(`[data-comment-id="${commentId}"]`);
+              if (commentDiv) {
+                commentDiv.style.opacity = '0';
+                commentDiv.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                  commentDiv.remove();
+                  
+                  // Check if no comments left
+                  const commentsList = document.querySelector('.comments-list');
+                  if (commentsList.children.length === 0) {
+                    const noCommentsDiv = document.createElement('div');
+                    noCommentsDiv.className = 'review-item';
+                    noCommentsDiv.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+                    commentsList.appendChild(noCommentsDiv);
+                  }
+                }, 300);
+              }
+            } else {
+              alert(data.message || 'Failed to delete comment');
+            }
+          })
+          .catch(error => {
+            console.error('Delete error:', error);
+            alert('Error deleting comment: ' + error.message);
+          });
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}

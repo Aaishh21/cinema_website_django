@@ -1,0 +1,113 @@
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/tickets/ticket-success.css' %}">
+{% endblock %}
+    
+{% block content %}
+    <main class="success-page">
+        <div class="left-poster">
+            {% if booking.showtime.movie.poster %}
+                <img src="{{ booking.showtime.movie.poster.url }}" alt="{{ booking.showtime.movie.title }}" class="poster-img">
+            {% else %}
+                <img src="{% static 'pics/Rectangle 85.png' %}" alt="Movie poster" class="poster-img">
+            {% endif %}
+        </div>
+
+        <div class="tickets-column" id="ticketsColumn">
+        </div>
+    </main>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('ticketsColumn');
+        
+        const ticketsData = {{ tickets_json|safe }};
+        const movieTitle = "{{ booking.showtime.movie.title }}";
+        const bookingDate = "{{ booking.showtime.start_time|date:'d M Y' }}";
+        const bookingTime = "{{ booking.showtime.start_time|time:'H:i' }}";
+        const posterUrl = "{{ booking.showtime.movie.poster.url }}";
+        const horizontalPosterUrl = "{{ booking.showtime.movie.horizontal_poster.url }}";
+
+        container.innerHTML = '';
+        if (!ticketsData.length) {
+            const empty = document.createElement('div');
+            empty.className = 'ticket-empty';
+            empty.textContent = 'No tickets found';
+            empty.style.color = '#999';
+            empty.style.padding = '24px 12px';
+            container.appendChild(empty);
+            return;
+        }
+
+        const qrSrc = '{% static 'pics/Rectangle 117.png' %}';
+        ticketsData.forEach(ticket => {
+            const row = ticket.seat.row;
+            const seat = ticket.seat.number;
+
+            const ticketRow = document.createElement('div');
+            ticketRow.className = 'ticket-row';
+            const qr = document.createElement('div');
+            qr.className = 'qr';
+            const qrImg = document.createElement('img');
+            qrImg.className = 'qr-img';
+            qrImg.alt = 'QR code';
+            qrImg.src = qrSrc;
+            qrImg.onerror = function(){ this.style.display = 'none'; };
+            qr.appendChild(qrImg);
+
+            const body = document.createElement('div');
+            body.className = 'ticket-body';
+            
+            if (horizontalPosterUrl) {
+                body.style.backgroundImage = `url('${horizontalPosterUrl}')`;
+            } else if (posterUrl) {
+                body.style.backgroundImage = `url('${posterUrl}')`;
+            }
+
+            const left = document.createElement('div');
+            left.className = 'ticket-left';
+            const title = document.createElement('h3');
+            title.className = 'movie-title';
+            title.textContent = movieTitle;
+            left.appendChild(title);
+            const meta = document.createElement('div'); meta.className = 'seat-meta';
+            const rowEl = document.createElement('div'); rowEl.className = 'seat-row'; rowEl.innerHTML = '<span class="label">ROW</span><strong>' + row + '</strong>';
+            const seatEl = document.createElement('div'); seatEl.className = 'seat-row'; seatEl.innerHTML = '<span class="label">SEAT</span><strong>' + seat + '</strong>';
+            meta.appendChild(rowEl);
+            meta.appendChild(seatEl);
+            left.appendChild(meta);
+
+            const right = document.createElement('div'); right.className = 'ticket-right';
+            
+            let displayDate = bookingDate || 'N/A';
+            let displayTime = bookingTime || 'N/A';
+            
+            const dateBlock = document.createElement('div'); dateBlock.className = 'date-block'; 
+            dateBlock.innerHTML = '<span class="label">DATE</span><strong>' + displayDate + '</strong>';
+            
+            const timeBlock = document.createElement('div'); timeBlock.className = 'time-block'; 
+            timeBlock.innerHTML = '<span class="label">TIME</span><strong>' + displayTime + '</strong>';
+            
+            right.appendChild(dateBlock);
+            right.appendChild(timeBlock);
+
+            body.appendChild(left);
+            body.appendChild(right);
+            ticketRow.appendChild(qr);
+            ticketRow.appendChild(body);
+            container.appendChild(ticketRow);
+        });
+
+            const actions = document.createElement('div');
+            actions.className = 'success-actions';
+            const link = document.createElement('a');
+            link.className = 'home-btn';
+            link.href = '/';
+            link.textContent = 'Back to Home';
+            actions.appendChild(link);
+            container.appendChild(actions);
+    });
+    </script>
+{% endblock %}
+
+
